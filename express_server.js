@@ -138,7 +138,7 @@ app.get('/urls', (req, res) => {
 });
 
 app.get("/urls/:shortURL", (req, res) => {
-  const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL], user: req.session.user_id}
+  const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL].longURL, user: req.session.user_id}
   const listKeys = Object.keys(urlDatabase);
   const filteredListKeys = Object.keys(filteredVars(templateVars.user ,urlDatabase));
   // Case when user not logged in
