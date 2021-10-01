@@ -106,7 +106,9 @@ app.listen(PORT, () => {
 });
 
 app.get("/urls/new", (req, res) => {
-  const templateVars = {user: req.session.user_id}
+  const userId = req.session.user_id;
+  const user = users[userId];
+  const templateVars = {user}
   if (!templateVars.user) {
     res.status(403);
     res.redirect("/login");
