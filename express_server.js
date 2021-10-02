@@ -164,6 +164,13 @@ app.get("/urls/:shortURL", (req, res) => {
 
 // Function to create new url and redirect you to it
 app.post("/urls", (req, res) => {
+  const userId = req.session.user_id;
+  const user = users[userId];
+  if (!user) {
+    res.status(403);
+    res.redirect("/login");
+    return;
+  }
   const shortURL = generateRandomString()
   urlDatabase[shortURL] = {longURL: req.body.longURL, userID: req.session.user_id};
   res.redirect(`/urls/${shortURL}`);
@@ -219,6 +226,18 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 
 // Updates the long url
 app.post("/urls/:shortURL", (req, res) => {
+  const userId = req.session.user_id;
+  const user = users[userId];
+  // Case when user is not logged in
+  if (!user) {
+    res.status(401).send("Please login to delete");
+    return;
+  }
+  // Case when user does not own url
+  if (urlDatabase[req.params.shortURL].userID !== userId) {
+    res.status(401).send("This is not your url");
+    return;
+  }
   urlDatabase[req.params.shortURL].longURL = req.body.longURL;
   res.redirect('/urls')
 });

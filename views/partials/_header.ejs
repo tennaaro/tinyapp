@@ -17,24 +17,24 @@
         </div>
       </div>
       <div>
-      <li>
+        <div class="navbar-nav">
         <form class="form-inline" action="/logout" method="POST">
           <button type="submit" class="btn btn-primary">Logout</button>
         </form>
-      </li>
+        </div>
       </div>
     <% } else { %> 
-    <li>
+      <div class="navbar-nav">
       <form class="form-inline" action="/login" method="GET">
         <button type="submit" class="btn btn-primary">Login</button>
       </form>
-    </li>
-    <li>|</li>
-    <li>
+      </div>
+      <li>|</li>
+      <div class="navbar-nav">
       <form class="form-inline" action="/register" method="GET">
         <button type="submit" class="btn btn-primary">Register</button>
       </form>
-    </li>
+      </div>
     <% } %> 
   </nav>
 </header>
