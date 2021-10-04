@@ -130,7 +130,8 @@ app.get('/urls', (req, res) => {
   const user = users[userId];
   // Case where user not logged in
   if (!user) {
-    res.status(401).send('Please login or register!');
+    //res.status(401).send('Please login or register!');
+    res.redirect("/login");
     return;
   }
   // When user logged in
@@ -140,24 +141,26 @@ app.get('/urls', (req, res) => {
 });
 
 app.get("/urls/:shortURL", (req, res) => {
-  const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL].longURL, user: req.session.user_id}
+  user = req.session.user_id;
+  shortURL = req.params.shortURL;
   const listKeys = Object.keys(urlDatabase);
-  const filteredListKeys = Object.keys(filteredVars(templateVars.user ,urlDatabase));
+  const filteredListKeys = Object.keys(filteredVars(user ,urlDatabase));
   // Case when user not logged in
-  if (!templateVars.user) {
+  if (!user) {
     res.status(401).send('Please login or register!');
     return;
   }
   // Case when url does not exist
-  if (!listKeys.includes(req.params.shortURL)) {
+  if (!listKeys.includes(shortURL)) {
     res.status(401).send("That url does not exist!")
     return;
   }
   // Case when url exists but user that is logged in does not own url
-  if (!filteredListKeys.includes(req.params.shortURL)) {
+  if (!filteredListKeys.includes(shortURL)) {
     res.status(401).send("This url is not yours to go to");
     return;
   }
+  const templateVars = { shortURL, longURL: urlDatabase[req.params.shortURL].longURL, user}
   // Case when user owns url
   res.render("urls_show", templateVars);
 });
@@ -167,7 +170,6 @@ app.post("/urls", (req, res) => {
   const userId = req.session.user_id;
   const user = users[userId];
   if (!user) {
-    res.status(403);
     res.redirect("/login");
     return;
   }
@@ -230,7 +232,7 @@ app.post("/urls/:shortURL", (req, res) => {
   const user = users[userId];
   // Case when user is not logged in
   if (!user) {
-    res.status(401).send("Please login to delete");
+    res.status(401).send("Please login to edit");
     return;
   }
   // Case when user does not own url
